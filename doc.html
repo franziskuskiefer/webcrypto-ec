@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <script src='//www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
+    <script class='remove'>
+      var respecConfig = {
+        specStatus: "unofficial",
+        editors: [{
+          name: "Franziskus Kiefer",
+          url: "https://franziskuskiefer.de",
+        }],
+        github: "https://github.com/franziskuskiefer/webcrypto-ec",
+      };
+    </script>
+  </head>
+  <body>
+    <h1>Web Cryptograhpy EC API</h1>
+    <section id='abstract'>
+      <p>
+        The <a data-cite="WebCryptoAPI">WebCrypto API</a> defines a very
+        high-level API for cryptographic primitives.
+        Sometimes it's necessary to access lower-level primitives to build
+        algorithms and protocols.
+        To allow building elliptic-curve (EC) cryptography algorithms and
+        protocols in JavaScript without having to rely on JavaScript implementations
+        this document defines extensions to the <a data-cite="WebCryptoAPI">WebCrypto API</a>.
+      </p>
+    </section>
+    <section id='sotd'>
+      <p>
+        This document is in an early work-in-progress state.
+      </p>
+    </section>
+    <section>
+      <h2>Scope</h2>
+      <p>
+        ToDo
+      </p>
+    </section>
+    <section data-dfn-for="WebCryptoEC" data-link-for="WebCryptoEC">
+      <h2><dfn>WebCryptoEC</dfn> Interface</h2>
+      <pre class="idl">
+      interface WebCryptoEC {
+        CryptoKey mod(ArrayBuffer h, any n);
+        CryptoKey mul(CryptoKey x, any G);
+        CryptoKey add(CryptoKey Y, CryptoKey M);
+        CryptoKey sub(CryptoKey Y, CryptoKey M);
+      };
+      </pre>
+      <section>
+        <h3><dfn>mod</dfn>(ArrayBuffer h, any n) method</dfn></h3>
+        <p>ToDo</p>
+        <ol class="algorithm">
+          <li>....</li>
+        </ol>
+      </section>
+      <section>
+        <h3><dfn>mul</dfn>(CryptoKey x, any G) method</h3>
+        <p>ToDo</p>
+        <ol class="algorithm">
+          <li>....</li>
+        </ol>
+      </section>
+      <section>
+        <h3><dfn>add</dfn>(CryptoKey Y, CryptoKey M) method</h3>
+        <p>ToDo</p>
+        <ol class="algorithm">
+          <li>....</li>
+        </ol>
+      </section>
+      <section>
+        <h3><dfn>sub</dfn>(CryptoKey Y, CryptoKey M) method</h3>
+        <p>ToDo</p>
+        <ol class="algorithm">
+          <li>....</li>
+        </ol>
+      </section>
+    </section>
+  </body>
+</html>
