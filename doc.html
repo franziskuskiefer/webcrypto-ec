@@ -43,38 +43,669 @@
       <h2><dfn>WebCryptoEC</dfn> Interface</h2>
       <pre class="idl">
       interface WebCryptoEC {
-        CryptoKey mod(ArrayBuffer h, any n);
-        CryptoKey mul(CryptoKey x, any G);
+        CryptoKey mod(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm,
+                      ArrayBuffer h, ArrayBuffer n);
+        CryptoKey mul(CryptoKey x, ArrayBuffer G);
         CryptoKey add(CryptoKey Y, CryptoKey M);
         CryptoKey sub(CryptoKey Y, CryptoKey M);
       };
       </pre>
       <section>
-        <h3><dfn>mod</dfn>(ArrayBuffer h, any n) method</dfn></h3>
-        <p>ToDo</p>
+        <h3><dfn>mod</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, ArrayBuffer h, ArrayBuffer n) method</dfn></h3>
         <ol class="algorithm">
-          <li>....</li>
+          <li>
+            <p>
+              Let <var>algorithm</var>, <var>h</var> and <var>n</var>
+              be the <code>algorithm</code>, <code>h</code> and <code>n</code>
+              parameters passed to the mod method, respectively.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>normalizedAlgorithm</var> be the result of
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-normalize-an-algorithm">normalizing an algorithm</a>, with
+              <code>alg</code> set to <var>algorithm</var> and <code>op</code> set to
+              <code>"generateKey"</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If an error occurred, return a Promise rejected with
+              <var>normalizedAlgorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>promise</var> be a new Promise.
+            </p>
+          </li>
+          <li>
+            <p>
+              Return <var>promise</var> and asynchronously perform the remaining steps.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the following steps say to
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> an error,
+              reject <var>promise</var> with
+              the returned error and then
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#terminate-the-algorithm">terminate the algorithm.</a>
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>hValue</var> be an integer value represented by <var>h</var>,
+              interpreting it as an unsigned big-endian integer of arbitrary byte length.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>nValue</var> be an integer value represented by <var>n</var>,
+              interpreting it as an unsigned big-endian integer of arbitrary byte length.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the value of <var>nValue</var> is 0,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>privateKeyValue</var>
+              be an integer value with the result of the modulo operation
+              (<var>hValue</var> mod <var>nValue</var>)</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>algorithm</var> be a new
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm">EcKeyAlgorithm</a>
+              object.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-KeyAlgorithm-name">name</a> attribute of
+              <var>algorithm</var> to <code>"ECDH"</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of <var>algorithm</var> to equal the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyGenParams">namedCurve</a> member of
+              <var>normalizedAlgorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>privateKey</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey">CryptoKey</a>
+              object, associated with the
+              <a href="https://www.w3.org/TR/html51/webappapis.html#relevant-global-object">relevant global object</a>
+              of <code>this</code> [<a href="https://www.w3.org/TR/WebCryptoAPI/#HTML">HTML</a>],
+              and representing the <var>privateKeyValue</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-type">type</a>]] internal slot of
+              <var>privateKey</var> to <code>"private"</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal
+              slot of <var>privateKey</var> to <var>algorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable">extractable</a>]] internal
+              slot of <var>privateKey</var> to the value true.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
+              <var>privateKey</var> to be <code>[]</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Resolve <var>promise</var> with <code>privateKey</code>.
+            </p>
+          </li>
         </ol>
       </section>
       <section>
-        <h3><dfn>mul</dfn>(CryptoKey x, any G) method</h3>
-        <p>ToDo</p>
+        <h3><dfn>mul</dfn>(CryptoKey x, ArrayBuffer G) method</h3>
         <ol class="algorithm">
-          <li>....</li>
+          <li>
+            <p>
+              Let <var>x</var> and <var>G</var>
+              be the <code>x</code> and <code>G</code>
+              parameters passed to the mul method, respectively.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>promise</var> be a new Promise.
+            </p>
+          </li>
+          <li>
+            <p>
+              Return <var>promise</var> and asynchronously perform the remaining steps.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the following steps say to
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> an error,
+              reject <var>promise</var> with
+              the returned error and then
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#terminate-the-algorithm">terminate the algorithm.</a>
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">type</a>]] internal slot of
+              <var>x</var> is not equal to <code>"private"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">name</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>x</var> is not equal to <code>"ECDH"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>namedCurve</var> be the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>x</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>xValue</var> be an integer value of the private key value represented by <var>x</var>.
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>GPoint</var> be a point on the <var>namedCurve</var> represented by <var>G</var>,
+              interpreting it as an encoded point (what's the name of it?).
+            <p>
+          </li>
+          <li>
+            <p>
+              If <var>GPoint</var> is not a point on the <var>namedCurve</var>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKeyValue</var>
+              be the result of scalar-point multiplication operation <code>(xValue * GPint)</code>
+              on the <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If performing the operation results in an error,
+              then <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-OperationError"><code>OperationError</code></a>.
+            </p>
+          </li>
+
+          <li>
+            <p>
+              Let <var>algorithm</var> be a new
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm">EcKeyAlgorithm</a>
+              object.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-KeyAlgorithm-name">name</a> attribute of
+              <var>algorithm</var> to <code>"ECDH"</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of <var>algorithm</var> to <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKey</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey">CryptoKey</a>
+              object, associated with the
+              <a href="https://www.w3.org/TR/html51/webappapis.html#relevant-global-object">relevant global object</a>
+              of <code>this</code> [<a href="https://www.w3.org/TR/WebCryptoAPI/#HTML">HTML</a>],
+              and representing the <var>publicKeyValue</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-type">type</a>]] internal slot of
+              <var>publicKey</var> to <code>"public"</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal
+              slot of <var>publicKey</var> to <var>algorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable">extractable</a>]] internal
+              slot of <var>publicKey</var> to the value true.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
+              <var>publicKey</var> to be <code>[]</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Resolve <var>promise</var> with <code>publicKey</code>.
+            </p>
+          </li>
         </ol>
       </section>
       <section>
         <h3><dfn>add</dfn>(CryptoKey Y, CryptoKey M) method</h3>
-        <p>ToDo</p>
         <ol class="algorithm">
-          <li>....</li>
+          <li>
+            <p>
+              Let <var>Y</var> and <var>M</var>
+              be the <code>Y</code> and <code>M</code>
+              parameters passed to the add method, respectively.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>promise</var> be a new Promise.
+            </p>
+          </li>
+          <li>
+            <p>
+              Return <var>promise</var> and asynchronously perform the remaining steps.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the following steps say to
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> an error,
+              reject <var>promise</var> with
+              the returned error and then
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#terminate-the-algorithm">terminate the algorithm.</a>
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">type</a>]] internal slot of
+              <var>Y</var> is not equal to <code>"public"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">type</a>]] internal slot of
+              <var>M</var> is not equal to <code>"public"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">name</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>Y</var> is not equal to <code>"ECDH"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">name</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>M</var> is not equal to <code>"ECDH"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>namedCurve</var> be the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>Y</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>M</var> is not equal to <var>namedCurve</var>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>YPoint</var> be a point on the <var>namedCurve</var> of the public key value represented by <var>Y</var>.
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>MPoint</var> be a point on the <var>namedCurve</var> of the public key value represented by <var>M</var>.
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>extractable</var> be the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">extractable</a>]] internal slot of
+              <var>Y</var>.
+
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>usages</var> be the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">usages</a>]] internal slot of
+              <var>Y</var>.
+
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKeyValue</var>
+              be the result of point-point add operation <code>(YPoint + MPoint)</code>
+              on the <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If performing the operation results in an error,
+              then <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-OperationError"><code>OperationError</code></a>.
+            </p>
+          </li>
+
+          <li>
+            <p>
+              Let <var>algorithm</var> be a new
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm">EcKeyAlgorithm</a>
+              object.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-KeyAlgorithm-name">name</a> attribute of
+              <var>algorithm</var> to <code>"ECDH"</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of <var>algorithm</var> to <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKey</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey">CryptoKey</a>
+              object, associated with the
+              <a href="https://www.w3.org/TR/html51/webappapis.html#relevant-global-object">relevant global object</a>
+              of <code>this</code> [<a href="https://www.w3.org/TR/WebCryptoAPI/#HTML">HTML</a>],
+              and representing the <var>publicKeyValue</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-type">type</a>]] internal slot of
+              <var>publicKey</var> to <code>"public"</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal
+              slot of <var>publicKey</var> to <var>algorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable">extractable</a>]] internal
+              slot of <var>publicKey</var> to <var>extractable</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
+              <var>publicKey</var> to <var>usages</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Resolve <var>promise</var> with <code>publicKey</code>.
+            </p>
+          </li>
         </ol>
       </section>
       <section>
         <h3><dfn>sub</dfn>(CryptoKey Y, CryptoKey M) method</h3>
-        <p>ToDo</p>
         <ol class="algorithm">
-          <li>....</li>
+          <li>
+            <p>
+              Let <var>Y</var> and <var>M</var>
+              be the <code>Y</code> and <code>M</code>
+              parameters passed to the sub method, respectively.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>promise</var> be a new Promise.
+            </p>
+          </li>
+          <li>
+            <p>
+              Return <var>promise</var> and asynchronously perform the remaining steps.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the following steps say to
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> an error,
+              reject <var>promise</var> with
+              the returned error and then
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#terminate-the-algorithm">terminate the algorithm.</a>
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">type</a>]] internal slot of
+              <var>Y</var> is not equal to <code>"public"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">type</a>]] internal slot of
+              <var>M</var> is not equal to <code>"public"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">name</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>Y</var> is not equal to <code>"ECDH"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">name</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>M</var> is not equal to <code>"ECDH"</code>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>namedCurve</var> be the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>Y</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal slot of
+              <var>M</var> is not equal to <var>namedCurve</var>,
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>YPoint</var> be a point on the <var>namedCurve</var> of the public key value represented by <var>Y</var>.
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>MPoint</var> be a point on the <var>namedCurve</var> of the public key value represented by <var>M</var>.
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>extractable</var> be the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">extractable</a>]] internal slot of
+              <var>Y</var>.
+
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>usages</var> be the
+              [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">usages</a>]] internal slot of
+              <var>Y</var>.
+
+            <p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKeyValue</var>
+              be the result of point-point subtract operation <code>(YPoint - MPoint)</code>
+              on the <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If performing the operation results in an error,
+              then <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-OperationError"><code>OperationError</code></a>.
+            </p>
+          </li>
+
+          <li>
+            <p>
+              Let <var>algorithm</var> be a new
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm">EcKeyAlgorithm</a>
+              object.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-KeyAlgorithm-name">name</a> attribute of
+              <var>algorithm</var> to <code>"ECDH"</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
+              attribute of <var>algorithm</var> to <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKey</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey">CryptoKey</a>
+              object, associated with the
+              <a href="https://www.w3.org/TR/html51/webappapis.html#relevant-global-object">relevant global object</a>
+              of <code>this</code> [<a href="https://www.w3.org/TR/WebCryptoAPI/#HTML">HTML</a>],
+              and representing the <var>publicKeyValue</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-type">type</a>]] internal slot of
+              <var>publicKey</var> to <code>"public"</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal
+              slot of <var>publicKey</var> to <var>algorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable">extractable</a>]] internal
+              slot of <var>publicKey</var> to <var>extractable</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
+              <var>publicKey</var> to <var>usages</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Resolve <var>promise</var> with <code>publicKey</code>.
+            </p>
+          </li>
         </ol>
       </section>
     </section>
