@@ -43,21 +43,21 @@
       <h2><dfn>WebCryptoEC</dfn> Interface</h2>
       <pre class="idl">
       interface WebCryptoEC {
-        CryptoKey mod(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm,
-                      ArrayBuffer h, ArrayBuffer n);
-        CryptoKey mul(CryptoKey x, ArrayBuffer G);
-        CryptoKey add(CryptoKey Y, CryptoKey M);
-        CryptoKey sub(CryptoKey Y, CryptoKey M);
+        Promise &lt;CryptoKey&gt; getPrivateKey(AlgorithmIdentifier algorithm,
+                                         ArrayBuffer h, ArrayBuffer n);
+        Promise&lt;CryptoKey&gt; mul(CryptoKey x, ArrayBuffer G);
+        Promise&lt;CryptoKey&gt; add(CryptoKey Y, CryptoKey M);
+        Promise&lt;CryptoKey&gt; sub(CryptoKey Y, CryptoKey M);
       };
       </pre>
       <section>
-        <h3><dfn>mod</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, ArrayBuffer h, ArrayBuffer n) method</dfn></h3>
+        <h3><dfn>getPrivateKey</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, ArrayBuffer h, ArrayBuffer n) method</dfn></h3>
         <ol class="algorithm">
           <li>
             <p>
               Let <var>algorithm</var>, <var>h</var> and <var>n</var>
               be the <code>algorithm</code>, <code>h</code> and <code>n</code>
-              parameters passed to the mod method, respectively.
+              parameters passed to the getPrivateKey method, respectively.
             </p>
           </li>
           <li>
@@ -170,7 +170,7 @@
           <li>
             <p>
               Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
-              <var>privateKey</var> to be <code>[]</code>.
+              <var>privateKey</var> to be <code>["deriveKey", "deriveBits"]</code>.
             </p>
           </li>
           <li>
@@ -245,8 +245,43 @@
           </li>
           <li>
             <p>
-              Let <var>GPoint</var> be a point on the <var>namedCurve</var> represented by <var>G</var>,
-              interpreting it as an encoded point (what's the name of it?).
+              Let <var>GPoint</var> be a point on the <var>namedCurve</var> represented by <var>G</var>.
+              <dl class="switch">
+                <dt>If <var>namedCurve</var> is <code>"P-256"</code>, <code>"P-384"</code> or <code>"P-521"</code>:</dt>
+                <dd>
+                  <ol>
+                    <li>
+                      <p>
+                        Point <var>G</var> MUST be in uncompressed format.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        If an error occurred, <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a>
+                        a <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+                      </p>
+                    </li>
+                  </ol>
+                </dd>
+                <dt>Otherwise:</dt>
+                <dd>
+                  <ol>
+                    <li>
+                      <p>
+                        Perform any key import steps defined by other applicable
+                        specifications, passing <var>namedCurve</var>, <var>G</var> and obtaining <var>GPoint</var>.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        If an error occurred or there are no
+                        <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-applicable-specification">applicable specifications</a>,
+                        <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+                      </p>
+                    </li>
+                  </ol>
+                </dd>
+              </dl>
             <p>
           </li>
           <li>
