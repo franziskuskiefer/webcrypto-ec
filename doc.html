@@ -44,14 +44,14 @@
       <pre class="idl">
       interface WebCryptoEC {
         Promise &lt;CryptoKey&gt; getPrivateKey(AlgorithmIdentifier algorithm,
-                                         ArrayBuffer h, ArrayBuffer n);
-        Promise&lt;CryptoKey&gt; mul(CryptoKey x, ArrayBuffer G);
+                                         BufferSource h, BufferSource n);
+        Promise&lt;CryptoKey&gt; mul(CryptoKey x, BufferSource G);
         Promise&lt;CryptoKey&gt; add(CryptoKey Y, CryptoKey M);
         Promise&lt;CryptoKey&gt; sub(CryptoKey Y, CryptoKey M);
       };
       </pre>
       <section>
-        <h3><dfn>getPrivateKey</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, ArrayBuffer h, ArrayBuffer n) method</dfn></h3>
+        <h3><dfn>getPrivateKey</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, BufferSource h, BufferSource n) method</dfn></h3>
         <ol class="algorithm">
           <li>
             <p>
@@ -181,7 +181,7 @@
         </ol>
       </section>
       <section>
-        <h3><dfn>mul</dfn>(CryptoKey x, ArrayBuffer G) method</h3>
+        <h3><dfn>mul</dfn>(CryptoKey x, BufferSource G) method</h3>
         <ol class="algorithm">
           <li>
             <p>
