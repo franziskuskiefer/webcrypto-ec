@@ -43,8 +43,8 @@
       <h2><dfn>WebCryptoEC</dfn> Interface</h2>
       <pre class="idl">
       interface WebCryptoEC {
-        Promise &lt;CryptoKey&gt; getPrivateKey(AlgorithmIdentifier algorithm,
-                                         BufferSource h, BufferSource n);
+        Promise &lt;CryptoKeyPair&gt; getPrivateKey(AlgorithmIdentifier algorithm,
+                                              BufferSource h, BufferSource n);
         Promise&lt;CryptoKey&gt; mul(CryptoKey x, BufferSource G);
         Promise&lt;CryptoKey&gt; add(CryptoKey Y, CryptoKey M);
         Promise&lt;CryptoKey&gt; sub(CryptoKey Y, CryptoKey M);
@@ -121,6 +121,19 @@
           </li>
           <li>
             <p>
+              Let <var>namedCurve</var> be the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyGenParams">namedCurve</a> member of
+              <var>normalizedAlgorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>publicKeyValue</var> be the public key for <var>privateKeyValue</var>
+              on the <var>namedCurve</var>.
+            </p>
+          </li>
+          <li>
+            <p>
               Let <var>algorithm</var> be a new
               <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm">EcKeyAlgorithm</a>
               object.
@@ -135,9 +148,7 @@
           <li>
             <p>
               Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyAlgorithm-namedCurve">namedCurve</a>
-              attribute of <var>algorithm</var> to equal the
-              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyGenParams">namedCurve</a> member of
-              <var>normalizedAlgorithm</var>.
+              attribute of <var>algorithm</var> to <var>namedCurve</var>.
             </p>
           </li>
           <li>
@@ -175,7 +186,55 @@
           </li>
           <li>
             <p>
-              Resolve <var>promise</var> with <var>privateKey</var>.
+              Let <var>publicKey</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey">CryptoKey</a>
+              object, associated with the
+              <a href="https://www.w3.org/TR/html51/webappapis.html#relevant-global-object">relevant global object</a>
+              of <code>this</code> [<a href="https://www.w3.org/TR/WebCryptoAPI/#HTML">HTML</a>],
+              and representing the <var>publicKeyValue</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-type">type</a>]] internal slot of
+              <var>publicKey</var> to <code>"public"</code>
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-algorithm">algorithm</a>]] internal
+              slot of <var>publicKey</var> to <var>algorithm</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable">extractable</a>]] internal
+              slot of <var>publicKey</var> to the value true.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the [[<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-usages">usages</a>]] internal slot of
+              <var>publicKey</var> to be <code>["deriveKey", "deriveBits"]</code>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let <var>result</var> be a new <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKeyPair">CryptoKeyPair</a> dictionary.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKeyPair-publicKey">publicKey</a> attribute of result to <var>publicKey</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Set the <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKeyPair-privateKey">privateKey</a> attribute of result to <var>privateKey</var>.
+            </p>
+          </li>
+          <li>
+            <p>
+              Resolve <var>promise</var> with <var>result</var>.
             </p>
           </li>
         </ol>
