@@ -44,19 +44,19 @@
       <pre class="idl">
       interface WebCryptoEC {
         Promise &lt;CryptoKeyPair&gt; getPrivateKey(AlgorithmIdentifier algorithm,
-                                              BufferSource h, BufferSource n);
+                                              BufferSource h);
         Promise&lt;CryptoKey&gt; mul(CryptoKey x, BufferSource G);
         Promise&lt;CryptoKey&gt; add(CryptoKey Y, CryptoKey M);
         Promise&lt;CryptoKey&gt; sub(CryptoKey Y, CryptoKey M);
       };
       </pre>
       <section>
-        <h3><dfn>getPrivateKey</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, BufferSource h, BufferSource n) method</dfn></h3>
+        <h3><dfn>getPrivateKey</dfn>(<a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-AlgorithmIdentifier">AlgorithmIdentifier</a> algorithm, BufferSource h) method</dfn></h3>
         <ol class="algorithm">
           <li>
             <p>
-              Let <var>algorithm</var>, <var>h</var> and <var>n</var>
-              be the <code>algorithm</code>, <code>h</code> and <code>n</code>
+              Let <var>algorithm</var> and <var>h</var>
+              be the <code>algorithm</code> and <code>h</code>
               parameters passed to the getPrivateKey method, respectively.
             </p>
           </li>
@@ -101,29 +101,22 @@
           </li>
           <li>
             <p>
-              Let <var>nValue</var> be an integer value represented by <var>n</var>,
-              interpreting it as an unsigned big-endian integer of arbitrary byte length.
+              Let <var>namedCurve</var> be the
+              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyGenParams">namedCurve</a> member of
+              <var>normalizedAlgorithm</var>.
             </p>
           </li>
           <li>
             <p>
-              If the value of <var>nValue</var> is 0,
-              <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a> a
-              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+              Let <var>n</var> be an integer value that is the order of
+              the generator specified by <var>namedCurve</var>.
             </p>
           </li>
           <li>
             <p>
               Let <var>privateKeyValue</var>
               be an integer value with the result of the modulo operation
-              (<var>hValue</var> mod <var>nValue</var>).
-            </p>
-          </li>
-          <li>
-            <p>
-              Let <var>namedCurve</var> be the
-              <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-EcKeyGenParams">namedCurve</a> member of
-              <var>normalizedAlgorithm</var>.
+              (<var>hValue</var> mod <var>n</var>).
             </p>
           </li>
           <li>
@@ -317,6 +310,15 @@
                     <li>
                       <p>
                         If an error occurred, <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a>
+                        a <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        If the order of the point <var>G</var> is not equal
+                        to the order of the generator specified by
+                        <var>namedCurve</var>,
+                        <a href="https://www.w3.org/TR/WebCryptoAPI/#concept-throw">throw</a>
                         a <a href="https://www.w3.org/TR/WebCryptoAPI/#dfn-DataError"><code>DataError</code></a>.
                       </p>
                     </li>
