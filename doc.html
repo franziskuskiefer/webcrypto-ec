@@ -805,5 +805,15 @@
         </ol>
       </section>
     </section>
+    <section>
+      <h2>Modification to SubtleCrypto interface</h2>
+      <div class="block"><div class="blockTitleDiv"><span class="blockTitle">IDL</span></div><div class="blockContent"><pre class="code"><code class="idl-code">
+[NoInterfaceObject,Exposed=(Window,Worker)]
+interface SubtleCrypto {
+  ...
+  <ins>readonly attribute <a href="#dfn-WebCryptoEC">WebCryptoEC</a> ec;</ins>
+};
+      </code></pre></div></div>
+    </section>
   </body>
 </html>
