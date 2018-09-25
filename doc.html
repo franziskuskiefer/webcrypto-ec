@@ -39,10 +39,10 @@
         ToDo
       </p>
     </section>
-    <section data-dfn-for="WebCryptoEC" data-link-for="WebCryptoEC">
-      <h2><dfn>WebCryptoEC</dfn> Interface</h2>
+    <section data-dfn-for="SubtleCryptoEC" data-link-for="SubtleCryptoEC">
+      <h2><dfn>SubtleCryptoEC</dfn> Interface</h2>
       <pre class="idl">
-      interface WebCryptoEC {
+      interface SubtleCryptoEC {
         Promise &lt;CryptoKeyPair&gt; getPrivateKey(AlgorithmIdentifier algorithm,
                                               BufferSource h);
         Promise&lt;CryptoKey&gt; mul(CryptoKey x, BufferSource G);
@@ -811,7 +811,7 @@
 [NoInterfaceObject,Exposed=(Window,Worker)]
 interface SubtleCrypto {
   ...
-  <ins>readonly attribute <a href="#dfn-WebCryptoEC">WebCryptoEC</a> ec;</ins>
+  <ins>readonly attribute <a href="#dfn-SubtleCryptoEC">SubtleCryptoEC</a> ec;</ins>
 };
       </code></pre></div></div>
     </section>
